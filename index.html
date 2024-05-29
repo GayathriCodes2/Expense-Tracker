@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+</head>
+
+<body>
+    <form id="signup-form">
+        <label for="username">Username</label>
+        <input type="text" class="username" id="username" name="username" required>
+        <label for="email">Email</label>
+        <input type="email" class="email" id="email" name="email" required>
+        <label for="password">Password</label>
+        <input type="password" class="password" id="password" name="password" required>
+        <button>Submit</button>
+    </form>
+    <script>
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            console.log(username, email, password);
+        })
+    </script>
+</body>
+
+</html>
