@@ -11,3 +11,25 @@ exports.addsignup = async(req,res)=>{
         res.send({message: e.message});
     }
 }
+
+exports.login = async(req,res)=>{
+    try {
+        const {email,password} = req.body;
+        const data = await signup.findOne({where:{email:email}})
+        console.log(">>>>>>>>>>>",data);
+        if(data!=null){
+            console.log(data.password===password);
+        if(data.password===password){
+            res.status(200).send({message:"Login Successfull"})
+        }else{
+            res.status(200).send({message:"password incorrect"})
+        }
+    }else{
+        res.status(400).send({message:"Email does not exist"})
+    }
+
+    } catch (error) {
+        res.status(400).send({message:"Email or password does not exist"})
+        console.log(":::::::::::::",error);
+    }
+}

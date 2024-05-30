@@ -13,7 +13,7 @@ app.use(cors());
 
 app.use(addsignup)
 
-db.sync({force:true}).then(()=>{
+db.sync().then(()=>{
     app.listen(9000,()=>console.log("Server Running"));
 })
 .catch(e=>console.log(e));  
