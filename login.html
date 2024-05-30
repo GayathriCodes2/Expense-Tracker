@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+</head>
+<body>
+    <form id='login-form'>
+        <label for="email">Email</label>
+        <input type="email" class="email" id="email" name="email" required>
+        <label for="password">Password</label>
+        <input type="password" class="password" id="password" name="password" required>
+        <button>Submit</button>
+    </form>
+    <a href="/index.html">New User - Signup Now</a>
+    <div id="errormsg"></div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const response = await axios.post('http://localhost:9000/login',{email,password})
+            console.log(response,"}}}}}}}}}");
+            if(response.data.status===400){
+                document.getElementById('errormsg').innerHTML(`<p style="color:red;">Error: Request failed with 403 code</p>`)
+            }
+            
+        })
+    </script>
+</body>
+</html>

@@ -17,13 +17,22 @@
         <input type="password" class="password" id="password" name="password" required>
         <button>Submit</button>
     </form>
+    <a href="/login.html">Existing User - Login</a>
+    <div id="errormsg"></div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         document.getElementById('signup-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const username = document.getElementById('username').value;
+            const name = document.getElementById('username').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             console.log(username, email, password);
+            const response = await axios.post('http://localhost:9000/signup',{name,email,password})
+            console.log(response.data.message);
+            if(response.data.message==="Validation error"){
+                alert("Validation Error")
+                document.getElementById('errormsg').innerHTML = `<p style="color:red;">Error: Request failed with 403 code</p>`;
+            }
         })
     </script>
 </body>
