@@ -24,11 +24,11 @@ exports.login = async (req, res) => {
                 res.status(200).send({ message: "Login Successfull" })
             } else {
                 //password incorrect
-                res.status(400).send({ message: "Error" })
+                res.status(404).send({ message: "Error" })
             }
         } else {
             //Email does not exist
-            res.status(400).send({ message: "Error" })
+            res.status(404).send({ message: "Error" })
         }
 
     } catch (error) {

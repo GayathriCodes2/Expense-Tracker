@@ -21,13 +21,18 @@
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            console.log(email,password);
-            const response = await axios.post('http://localhost:9000/login',{email,password})
-            console.log(response,"}}}}}}}}}");
-            if(response.data.message==="Error"){
-                document.getElementById('errormsg').innerHTML(`<p style="color:red;">Error: Request failed with 403 code</p>`)
-            }
-            
+            try{
+                const response = await axios.post('http://localhost:9000/login',{email,password})
+            console.log(response.data);
+            if (response.data.message === "Login Successfull") {
+            document.getElementById('errormsg').innerHTML = '<p style="color:green;">Login Successful</p>';
+        } else {
+            document.getElementById('errormsg').innerHTML = '<p style="color:red;">Error: Request failed</p>';
+        }
+    } catch (error) {
+        console.log(error);
+        document.getElementById('errormsg').innerHTML = '<p style="color:red;">Error: Request failed with 404 code</p>';
+    }
         })
     </script>
 </body>
