@@ -11,7 +11,7 @@
         <input type="email" class="email" id="email" name="email" required>
         <label for="password">Password</label>
         <input type="password" class="password" id="password" name="password" required>
-        <button>Submit</button>
+        <button type="submit">Submit</button>
     </form>
     <a href="/index.html">New User - Signup Now</a>
     <div id="errormsg"></div>
@@ -21,9 +21,10 @@
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            console.log(email,password);
             const response = await axios.post('http://localhost:9000/login',{email,password})
             console.log(response,"}}}}}}}}}");
-            if(response.data.status===400){
+            if(response.data.message==="Error"){
                 document.getElementById('errormsg').innerHTML(`<p style="color:red;">Error: Request failed with 403 code</p>`)
             }
             
