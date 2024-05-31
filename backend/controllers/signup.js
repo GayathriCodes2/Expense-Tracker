@@ -28,7 +28,7 @@ exports.login = async (req, res) => {
                     return res.status(500).send({ success: false, message: "Something went wrong" });
                 }
                 if (result) {
-                    return res.status(200).send({ success: true, message: "Login Successful" });
+                    return res.status(200).send({ success: true, message: "Login Successful", data:data });
                 } else {
                     return res.status(404).send({ success: false, message: "Password incorrect" });
                 }

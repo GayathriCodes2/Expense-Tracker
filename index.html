@@ -36,6 +36,7 @@
                 document.getElementById('errormsg').innerHTML = `<p style="color:red;">Error: Request failed with 403 code</p>`;
             } else {
                 document.getElementById('errormsg').innerHTML = `<p style="color:green;">${response.data.message}</p>`;
+                window.location.href = 'login.html';
             }
         })
     </script>

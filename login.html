@@ -25,6 +25,9 @@
                 const response = await axios.post('http://localhost:9000/login',{email,password})
             console.log(response.data.success);
             if (response.data.success) {
+                console.log(response.data.data.id);
+                localStorage.setItem("id",response.data.data.id)
+                alert()
             document.getElementById('errormsg').innerHTML = '<p style="color:green;">Login Successful</p>';
             window.location.href = 'expenseForm.html';
         } else {

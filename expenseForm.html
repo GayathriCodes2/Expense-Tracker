@@ -31,8 +31,9 @@
             const price = document.getElementById('price').value
             const desc = document.getElementById('desc').value
             const category = document.getElementById('category').value
+            const userId = localStorage.getItem("id")
             console.log(price, desc, category);
-            const response = await axios.post('http://localhost:9000/expense', { price, desc, category });
+            const response = await axios.post('http://localhost:9000/expense', { price, desc, category, userId });
             console.log(response);
             if (response.data.success) {
                 display();
@@ -40,7 +41,9 @@
         })
         async function display() {
             try {
-                const response = await axios.get('http://localhost:9000/expense');
+                console.log(localStorage.getItem("id"));
+                const id = localStorage.getItem("id");
+                const response = await axios.get(`http://localhost:9000/expense/${btoa(id)}`);
                 const expenses = response.data.data;
                 console.log(expenses);
                 const detail = document.getElementById('data');
