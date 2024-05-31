@@ -27,11 +27,15 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             console.log(username, email, password);
-            const response = await axios.post('http://localhost:9000/signup',{name,email,password})
+            const response = await axios.post('http://localhost:9000/signup', { name, email, password })
             console.log(response.data.message);
-            if(response.data.message==="Validation error"){
-                alert("Validation Error")
+            document.getElementById('username').value="";
+            document.getElementById('email').value="";
+            document.getElementById('password').value="";
+            if (response.data.message === "Validation error") {
                 document.getElementById('errormsg').innerHTML = `<p style="color:red;">Error: Request failed with 403 code</p>`;
+            } else {
+                document.getElementById('errormsg').innerHTML = `<p style="color:green;">${response.data.message}</p>`;
             }
         })
     </script>

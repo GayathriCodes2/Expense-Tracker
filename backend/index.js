@@ -16,4 +16,4 @@ app.use(addsignup)
 db.sync().then(()=>{
     app.listen(9000,()=>console.log("Server Running"));
 })
-.catch(e=>console.log(e));  
+.catch(e=>console.log(e));   

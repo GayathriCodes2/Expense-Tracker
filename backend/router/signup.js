@@ -5,4 +5,4 @@ const signup = require('../controllers/signup')
 router.post('/signup',signup.addsignup)
 router.post('/login',signup.login)
 
-module.exports = router
+module.exports = router 
