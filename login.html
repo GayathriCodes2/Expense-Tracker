@@ -26,6 +26,7 @@
             console.log(response.data.success);
             if (response.data.success) {
             document.getElementById('errormsg').innerHTML = '<p style="color:green;">Login Successful</p>';
+            window.location.href = 'expenseForm.html';
         } else {
             document.getElementById('errormsg').innerHTML = '<p style="color:red;">Error: Request failed</p>';
         }

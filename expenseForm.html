@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Form</title>
+</head>
+
+<body>
+    <form id="form">
+        <label for="price">Choose Expense Amount</label>
+        <input type="number" name="price" class="price" id="price" required>
+        <label for="desc">Choose Expense Amount</label>
+        <input type="text" name="desc" class="desc" id="desc" required>
+        <label for="category">Choose Expense Amount</label>
+        <select name="category" id="category">
+            <option value="fuel">Fuel</option>
+            <option value="food">Food</option>
+            <option value="electricity">Electricity</option>
+            <option value="movie">Movie</option>
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="msg"></div>
+    <div id="data"></div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        document.getElementById('form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const price = document.getElementById('price').value
+            const desc = document.getElementById('desc').value
+            const category = document.getElementById('category').value
+            console.log(price, desc, category);
+            const response = await axios.post('http://localhost:9000/expense', { price, desc, category });
+            console.log(response);
+            if (response.data.success) {
+                display();
+            }
+        })
+        async function display() {
+            try {
+                const response = await axios.get('http://localhost:9000/expense');
+                const expenses = response.data.data;
+                console.log(expenses);
+                const detail = document.getElementById('data');
+
+                detail.innerHTML=' '
+                expenses.forEach((expense) => {
+                    console.log(expense.price);
+                    const item = document.createElement('div');
+                    item.innerHTML = `
+                        <p>Price: ${expense.price}, Description: ${expense.desc}, Category: ${expense.category}
+                        <button type="button" onclick="deleteExpense('${expense.id}')">Delete</button></p>
+                    `;
+                    console.log("?????????");
+                    detail.appendChild(item);
+                });
+            } catch (error) {
+                console.error('Error fetching expenses:', error);
+            }
+        }
+
+        window.deleteExpense = async function(id) {
+            try {
+            const response = await axios.delete(`http://localhost:9000/expense/${id}`);
+            alert("Expense deleted Successully")
+            display()
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        display()
+    </script>
+</body>
+
+</html>
