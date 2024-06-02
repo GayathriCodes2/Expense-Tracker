@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
 </head>
+
 <body>
     <form id='login-form'>
         <label for="email">Email</label>
@@ -15,29 +17,34 @@
     </form>
     <a href="/index.html">New User - Signup Now</a>
     <div id="errormsg"></div>
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     <script>
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            try{
-                const response = await axios.post('http://localhost:9000/login',{email,password})
-            console.log(response.data.success);
-            if (response.data.success) {
-                console.log(response.data.data.id);
-                localStorage.setItem("id",response.data.data.id)
-                alert()
-            document.getElementById('errormsg').innerHTML = '<p style="color:green;">Login Successful</p>';
-            window.location.href = 'expenseForm.html';
-        } else {
-            document.getElementById('errormsg').innerHTML = '<p style="color:red;">Error: Request failed</p>';
-        }
-    } catch (error) {
-        console.log(error);
-        document.getElementById('errormsg').innerHTML = '<p style="color:red;">Error: Request failed with 404 code</p>';
-    }
+            try {
+                const response = await axios.post('http://localhost:9000/login', { email, password })
+
+                if (response.data.success) {
+                    // localStorage.setItem("id",btoa(response.data.data.id))
+                    console.log(response);
+                    localStorage.setItem("id", response.data.token)
+                    window.location.href = 'expenseForm.html';
+                }
+                
+                else {
+                    document.getElementById('errormsg').innerHTML = '<p style="color:red;">Error: Request failed</p>';
+                }
+
+            } catch (error) {
+                console.log(error);
+                document.getElementById('errormsg').innerHTML = '<p style="color:red;">Error: Request failed with 404 code</p>';
+            }
         })
     </script>
 </body>
+
 </html>
