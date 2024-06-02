@@ -16,9 +16,8 @@ exports.createExpense = async (req, res) => {
 
 exports.readExpense = async(req,res)=>{
     try {
-        const userid = req.params.id;
-        console.log(atob(userid));
-        const data = await expense.findAll({where:{userid:atob(userid)}});
+        const userid = req.user.id;
+        const data = await expense.findAll({where:{userId:userid}});
         res.status(200).send({ success: true, message: 'Expense Readed Successfully', data: data })
     } catch (error) {
         console.log(error);
