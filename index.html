@@ -28,7 +28,7 @@
             const password = document.getElementById('password').value;
 
             const response = await axios.post('http://localhost:9000/signup', { name, email, password })
-            console.log(response.data.message);
+
             document.getElementById('username').value="";
             document.getElementById('email').value="";
             document.getElementById('password').value="";

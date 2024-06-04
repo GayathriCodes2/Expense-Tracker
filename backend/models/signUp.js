@@ -1,6 +1,6 @@
 const sequelize = require('sequelize');
 const db = require('../utils/db')
-const users = db.define('users', {
+const users = db.define('user', {
     id:{
         type:sequelize.INTEGER,
         autoIncrement:true,
@@ -19,6 +19,10 @@ const users = db.define('users', {
     password:{
         type:sequelize.STRING,
         allowNull:false
+    },
+    isPremiumUser: {
+        type: sequelize.BOOLEAN,
+        defaultValue: false
     }
 });
 

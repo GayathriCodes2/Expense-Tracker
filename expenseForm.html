@@ -1,88 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Expense Form</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <form id="form">
-        <label for="price">Choose Expense Amount</label>
-        <input type="number" name="price" class="price" id="price" required>
-        <label for="desc">Choose Expense Amount</label>
-        <input type="text" name="desc" class="desc" id="desc" required>
-        <label for="category">Choose Expense Amount</label>
-        <select name="category" id="category">
-            <option value="fuel">Fuel</option>
-            <option value="food">Food</option>
-            <option value="electricity">Electricity</option>
-            <option value="movie">Movie</option>
-        </select>
-        <button type="submit">Submit</button>
+      <label for="price">Choose Expense Amount</label>
+      <input type="number" name="price" class="price" id="price" required />
+      <label for="desc">Choose Expense Amount</label>
+      <input type="text" name="desc" class="desc" id="desc" required />
+      <label for="category">Choose Expense Amount</label>
+      <select name="category" id="category">
+        <option value="fuel">Fuel</option>
+        <option value="food">Food</option>
+        <option value="electricity">Electricity</option>
+        <option value="movie">Movie</option>
+      </select>
+      <button type="submit">Submit</button>
     </form>
     <button id="premium">Become a Premium Customer</button>
     <div id="msg"></div>
     <div id="data"></div>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        document.getElementById('premium').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const response = await axios.get("http://localhost:9000/premium")
-        })
+      document
+        .getElementById("premium")
+        .addEventListener("click", async (e) => {
+            const token = localStorage.getItem("id");
+          const response = await axios.get(
+            "http://127.0.0.1:9000/purchase/premiummembership",
+            { headers: { Authorization: token } }
+          );
+          console.log(response.data.order.id, response.data.key_id);
 
-        document.getElementById('form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const price = document.getElementById('price').value
-            const desc = document.getElementById('desc').value
-            const category = document.getElementById('category').value
+          var options = {
+            key: response.data.key_id,
+            order_id: response.data.order.id,
+            handler: async function (response) {
+              await axios.post(
+                "http://127.0.0.1:9000/purchase/updatetransactionstatus",
+                {
+                  order_id: options.order_id,
+                  payment_id: response.razorpay_payment_id,
+                },
+                { headers: { Authorization: token } }
+              );
 
-            // const userId = atob(localStorage.getItem("id"))
+              alert("You are a Premium User Now");
+              window.location.reload();
+            },
+          };
+          var rzp1 = new Razorpay(options);
+          rzp1.open();
+          e.preventDefault();
+          rzp1.on("payment.failed", async function (response) {
+            await axios.post(
+              "http://127.0.0.1:9000/purchase/failedtransactionstatus",
+              {
+                order_id: options.order_id,
+                payment_id: response.razorpay_payment_id,
+              },
+              { headers: { Authorization: token } }
+            );
+            alert(response.error.description);
+          });
+        });
 
-            const userId = localStorage.getItem("id")
-            console.log(userId);
+      document.getElementById("form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem("id");
+        const price = document.getElementById("price").value;
+        const desc = document.getElementById("desc").value;
+        const category = document.getElementById("category").value;
 
-            const response = await axios.post('http://localhost:9000/expense', { price, desc, category, userId });
+        // const userId = atob(localStorage.getItem("id"))
 
-            if (response.data.success) {
-                display();
-            }
-        })
-        async function display() {
-                const token = localStorage.getItem("id");
-                await axios.get(`http://localhost:9000/expense`, { headers: { "Authorization": token } }).then(response => {
-                    const expenses = response.data.data;
-                    console.log(expenses);
-                    const detail = document.getElementById('data');
+        const userId = localStorage.getItem("id");
+        console.log(userId);
 
-                    detail.innerHTML = ' '
-                    expenses.forEach((expense) => {
-                        console.log(expense.price);
-                        const item = document.createElement('div');
-                        item.innerHTML = `
+        const response = await axios.post(
+          "http://localhost:9000/expense",
+          { price, desc, category, userId },
+          { headers: { Authorization: token } }
+        );
+
+        if (response.data.success) {
+          display();
+        }
+      });
+      async function display() {
+        const token = localStorage.getItem("id");
+        console.log("????????????", token);
+        await axios
+          .get(`http://localhost:9000/expense`, {
+            headers: { Authorization: token },
+          })
+          .then((response) => {
+            const expenses = response.data.data;
+            console.log(expenses);
+            const detail = document.getElementById("data");
+
+            detail.innerHTML = " ";
+            expenses.forEach((expense) => {
+              console.log(expense.price);
+              const item = document.createElement("div");
+              item.innerHTML = `
                         <p>Price: ${expense.price}, Description: ${expense.desc}, Category: ${expense.category}
                         <button type="button" onclick="deleteExpense('${expense.id}')">Delete</button></p>`;
-                        console.log("?????????");
-                        detail.appendChild(item);
-                    })
-                }).catch((error)=>{
-                console.error('Error fetching expenses:', error);
-            })
-        }
+              console.log("?????????");
+              detail.appendChild(item);
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching expenses:", error);
+          });
+      }
 
-        window.deleteExpense = async function (id) {
-            try {
-                const response = await axios.delete(`http://localhost:9000/expense/${id}`);
-                alert("Expense deleted Successully")
-                display()
-            } catch (error) {
-                console.log(error);
-            }
+      window.deleteExpense = async function (id) {
+        try {
+          const response = await axios.delete(
+            `http://localhost:9000/expense/${id}`
+          );
+          alert("Expense deleted Successully");
+          display();
+        } catch (error) {
+          console.log(error);
         }
+      };
 
-        display()
+      display();
     </script>
-</body>
-
+  </body>
 </html>

@@ -31,7 +31,6 @@ exports.login = async (req, res) => {
         if (data != null) {
            
             bcrypt.compare(password, data.password, (err, result) => {
-                console.log(password, data.password,"}}}}}}");
                 if (err) {
                     console.log("Error comparing passwords:", err);
                     return res.status(500).send({ success: false, message: "Something went wrong" });
@@ -48,6 +47,6 @@ exports.login = async (req, res) => {
 
     } catch (error) {
         res.status(400).send({success:false, message: " Email or password does not exist" })
-        console.log(":::::::::::::", error);
+        console.log(error);
     }
 }

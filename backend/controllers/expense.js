@@ -2,9 +2,12 @@ const expense = require('../models/expense')
 
 exports.createExpense = async (req, res) => {
     try {
-        console.log(req.body);
-        const data = await expense.create(req.body)
-        console.log(data);
+        const price =req.body.price;
+        const desc = req.body.desc;
+        const category = req.body.category;
+        const userId = req.user.id;
+
+        const data = await expense.create({price,desc,category,userId})
         res.status(200).send({ success: true, message: 'Expense Created Successfully', data: data })
     } catch (error) {
         console.log(error);
@@ -27,7 +30,6 @@ exports.readExpense = async(req,res)=>{
 
 exports.deleteExpense = async(req,res)=>{
     try {
-        console.log(req.params.id);
         const data = await expense.destroy({where:{id:req.params.id}})
        
         res.status(200).send({ success: true, message: 'Expense Deleted Successfully', data: data })

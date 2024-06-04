@@ -27,10 +27,8 @@
             const password = document.getElementById('password').value;
             try {
                 const response = await axios.post('http://localhost:9000/login', { email, password })
-
                 if (response.data.success) {
                     // localStorage.setItem("id",btoa(response.data.data.id))
-                    console.log(response);
                     localStorage.setItem("id", response.data.token)
                     window.location.href = 'expenseForm.html';
                 }
@@ -38,9 +36,7 @@
                 else {
                     document.getElementById('errormsg').innerHTML = '<p style="color:red;">Error: Request failed</p>';
                 }
-
             } catch (error) {
-                console.log(error);
                 document.getElementById('errormsg').innerHTML = '<p style="color:red;">Error: Request failed with 404 code</p>';
             }
         })
